@@ -51,3 +51,7 @@ rsconnect/
 # data folder
 data/raw-data/
 data/derived-data/EU_grid_*.gpkg
+
+# RStudio-related files
+.Rbuildignore
+*.Rproj

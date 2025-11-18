@@ -37,6 +37,8 @@ source(here("analyses", "02_get_landcover.R"))
 # https://chelsa-climate.org/
 source(here("analyses", "03_get_bioclim.R"))
 
+# 4 Get mean yearly temperatures
+source(here("analyses", "04_get_tempyear.R"))
 
 # 4. Format environmental variables
-source(here("analyses", "04_format_env.R"))
+source(here("analyses", "05_format_env.R"))
