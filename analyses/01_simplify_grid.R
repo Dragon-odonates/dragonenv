@@ -16,8 +16,8 @@ library(here)
 
 # Set the resolution (5, 10, or 50 km)
 # the resolution is set in the make.R file
-# if run independantly, de-comment the folloting line
-# gridsize_km <- "50"
+# if run independantly, de-comment the following line
+gridsize_km <- "10"
 
 # List of countries to get the grid for
 # fmt: skip
@@ -37,7 +37,10 @@ raw_file <- list(
 
 # Get EEA 50km grid ---------------------------------------------------------------
 
-# Original file downloaded from https://sdi.eea.europa.eu/catalogue/srv/api/records/aac8379a-5c4e-445c-b2ef-23a6a2701ef0?language=all
+# Original file downloaded from 
+# 50km: https://sdi.eea.europa.eu/catalogue/srv/api/records/aac8379a-5c4e-445c-b2ef-23a6a2701ef0?language=all
+# 10km: https://sdi.eea.europa.eu/data/e834751f-19d1-4842-823d-e90e600c5993
+# 1km: https://sdi.eea.europa.eu/catalogue/geoss/api/records/d9d4684e-0a8d-496c-8be8-110f4b9465f6 (can't access it)
 g1 <- st_read(here("data", "raw-data", raw_file[gridsize_km]))
 
 # handle GEOMETRYCOLLECTION (in the case of 50km grid)
