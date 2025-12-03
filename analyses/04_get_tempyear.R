@@ -12,7 +12,7 @@ url_monthlytas <- "https://os.unil.cloud.switch.ch/chelsa02/chelsa/global/monthl
 # Set the resolution (5, 10, or 50 km)
 # the resolution is set in the make.R file
 # if run independantly, de-comment the folloting line
-gridsize_km <- "50"
+gridsize_km <- "10"
 
 
 # Get grid ----------------------------------------------------------------
@@ -20,7 +20,7 @@ gridfile <- paste0("EU_grid_", gridsize_km, "km.gpkg")
 grid <- st_read(here("data", "derived-data", gridfile))
 
 # Query temperature -------------------------------------------------------
-startdate <- as.Date("2005-01-01")
+startdate <- as.Date("1990-01-01")
 enddate <- as.Date("2021-12-31")
 dseq <- seq.Date(startdate, enddate, by = "month")
 
@@ -67,16 +67,18 @@ mmtas <- mtas_long[, .(temp_mean = mean(value)), by = .(year, cellcode)]
 # Convert to °C
 mmtas[, temp_mean := temp_mean - 273.15]
 
-# Visual check ------------------------------------------------------------
-# Format back to several columns
-mmtas_wide <- data.table::dcast(mmtas, 
-                                formula = cellcode ~ year, 
-                                value.var = "temp_mean")
+# # Format back to several columns
+# mmtas_wide <- data.table::dcast(mmtas, 
+#                                 formula = cellcode ~ year, 
+#                                 value.var = "temp_mean")
+# 
+# grid_temp <- grid |> 
+#   dplyr::left_join(mmtas_wide, by = "cellcode")
 
-grid_temp <- grid |> 
-  dplyr::left_join(mmtas_wide, by = "cellcode")
 
-# export
+# Export ------------------------------------------------------------------
 write.csv(mmtas,
-          here::here("data", "derived-data", "CHELSA_yearly_tas_2005_2021.csv"),
+          here::here("data", "derived-data", 
+                     paste0("CHELSA_yearly_tas_",
+                            gridsize_km , "km.csv")),
           row.names = FALSE)
