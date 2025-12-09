@@ -14,10 +14,10 @@ library(sf)
 library(terra)
 library(here)
 
-# Set the resolution (5, 10, or 50 km)
+# Set the resolution (1, 2, 5, 10, or 50 km)
 # the resolution is set in the make.R file
 # if run independantly, de-comment the following line
-gridsize_km <- "10"
+gridsize_km <- "50"
 
 # List of countries to get the grid for
 # fmt: skip
@@ -28,34 +28,30 @@ country_list <- c("Austria", "Belgium", "Cyprus", "Czechia",
                   "Sweden", "Switzerland", "United Kingdom")
 
 # get the name of the raw file
-raw_file <- list(
-  "50" = "EEA_50km_grid_v2024.gpkg",
-  "10" = "Grid_ETRS89-LAEA_10K.shp",
-  "5" = "5km.shp"
-)
+raw_file <- paste0("grid_", gridsize_km, "km_surf.gpkg")
 
 
-# Get EEA 50km grid ---------------------------------------------------------------
+# Get grids ---------------------------------------------------------------
+# Original file downloaded from https://ec.europa.eu/eurostat/web/gisco/geodata/grids
+grid <- vect(here("data", "raw-data", raw_file))
 
-# Original file downloaded from 
-# 50km: https://sdi.eea.europa.eu/catalogue/srv/api/records/aac8379a-5c4e-445c-b2ef-23a6a2701ef0?language=all
-# 10km: https://sdi.eea.europa.eu/data/e834751f-19d1-4842-823d-e90e600c5993
-# 1km: https://sdi.eea.europa.eu/catalogue/geoss/api/records/d9d4684e-0a8d-496c-8be8-110f4b9465f6 (can't access it)
-g1 <- st_read(here("data", "raw-data", raw_file[gridsize_km]))
+# change GRD_ID to cellcode (for legacy code)
+names(grid)[names(grid) == "GRD_ID"] <- "cellcode"
 
-# handle GEOMETRYCOLLECTION (in the case of 50km grid)
-if (st_geometry_type(g1, by_geometry = FALSE) == "POLYGON") {
-  grid <- vect(g1)
-} else {
-  # transformed from original grid into POLYGON
-  g2 <- st_cast(g1, "GEOMETRYCOLLECTION")
-  grid <- st_collection_extract(g2, "POLYGON")
-  # then convert it to terra::SpatVector object
-  grid <- vect(grid)
-}
+# g1 <- st_read(here("data", "raw-data", raw_file[gridsize_km]))
 
+# # handle GEOMETRYCOLLECTION (in the case of 50km grid)
+# if (st_geometry_type(g1, by_geometry = FALSE) == "POLYGON") {
+#   grid <- vect(g1)
+# } else {
+#   # transformed from original grid into POLYGON
+#   g2 <- st_cast(g1, "GEOMETRYCOLLECTION")
+#   grid <- st_collection_extract(g2, "POLYGON")
+#   # then convert it to terra::SpatVector object
+#   grid <- vect(grid)
+# }
 # make sure 'cellcode' is in lower case (avoid the case of 10km grid with CellCode)
-names(grid)[tolower(names(grid)) == "cellcode"] <- "cellcode"
+# names(grid)[tolower(names(grid)) == "cellcode"] <- "cellcode"
 
 # Get countries vectors ---------------------------------------------------
 

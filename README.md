@@ -13,7 +13,7 @@ This repository is structured as follow:
 
 The analysis can be done at difference scales (5, 10 or 50km are supported). There are 4 sequential steps:  
 
-1. simplify the grid from [EEA Reference grid](https://www.eea.europa.eu/en/datahub/datahubitem-view/3c362237-daa4-45e2-8c16-aaadfb1a003b)  
+1. simplify the grid from [EEA Reference grid](https://ec.europa.eu/eurostat/web/gisco/geodata/grids)  
 2. extract landcover information from Corine Land Cover
 3. extract bioclimatic variables from CHELSA dataset
 4. format environmental data 
@@ -27,9 +27,7 @@ source("make.R")
 
 The raw dataset is heavy and not hosted in Github but it can be downloaded:  
 
-- [EEA Grid 50 km](https://sdi.eea.europa.eu/data/aac8379a-5c4e-445c-b2ef-23a6a2701ef0)
-- [EEA Grid 10 km](https://sdi.eea.europa.eu/data/e834751f-19d1-4842-823d-e90e600c5993)
-- [EEA Grid 5 km](https://sdi.eea.europa.eu/data/c56f5e2b-6e7f-4da7-a5b3-25a8c17ca717)
+- [EEA Grids (1, 2, 5, 10 and 50 km)](https://ec.europa.eu/eurostat/web/gisco/geodata/grids)
 - [CORINE Land Cover 2018 raster 100 m](https://land.copernicus.eu/en/products/corine-land-cover/clc2018)
 - [Chelsa Bio1 1981-2010 raster 1km](https://os.zhdk.cloud.switch.ch/chelsav2/GLOBAL/climatologies/1981-2010/bio/CHELSA_bio1_1981-2010_V.2.1.tif)
 - [Chelsa Bio4 1981-2010 raster 1km](https://os.zhdk.cloud.switch.ch/chelsav2/GLOBAL/climatologies/1981-2010/bio/CHELSA_bio4_1981-2010_V.2.1.tif)
