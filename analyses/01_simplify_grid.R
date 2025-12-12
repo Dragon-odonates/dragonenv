@@ -1,12 +1,9 @@
 # Transform occurrence data on 50km grid
 # usefull for shinyapp (but not needed for further modelling)
 # input:
-#  raw-data/occ_all.rds
-#  raw-data/EEA_50km.gpkg
+#  raw-data/grid_xxkm_surf.gpkg
 # output:
-#  derived-data/occ_grid_50km.rds
-#  derived-data/EU_grid_50km.gpkg
-#  derived-data/EU_points_50km.gpkg
+#  derived-data/EU_grid_xxkm.gpkg
 
 ## Load Project Addins (R Functions) -------------
 library(rnaturalearth)
@@ -16,7 +13,7 @@ library(here)
 
 # Set the resolution (1, 2, 5, 10, or 50 km)
 # the resolution is set in the make.R file
-# if run independantly, de-comment the following line
+# if run independently, de-comment the following line
 gridsize_km <- "50"
 
 # List of countries to get the grid for
@@ -34,24 +31,6 @@ raw_file <- paste0("grid_", gridsize_km, "km_surf.gpkg")
 # Get grids ---------------------------------------------------------------
 # Original file downloaded from https://ec.europa.eu/eurostat/web/gisco/geodata/grids
 grid <- vect(here("data", "raw-data", raw_file))
-
-# change GRD_ID to cellcode (for legacy code)
-names(grid)[names(grid) == "GRD_ID"] <- "cellcode"
-
-# g1 <- st_read(here("data", "raw-data", raw_file[gridsize_km]))
-
-# # handle GEOMETRYCOLLECTION (in the case of 50km grid)
-# if (st_geometry_type(g1, by_geometry = FALSE) == "POLYGON") {
-#   grid <- vect(g1)
-# } else {
-#   # transformed from original grid into POLYGON
-#   g2 <- st_cast(g1, "GEOMETRYCOLLECTION")
-#   grid <- st_collection_extract(g2, "POLYGON")
-#   # then convert it to terra::SpatVector object
-#   grid <- vect(grid)
-# }
-# make sure 'cellcode' is in lower case (avoid the case of 10km grid with CellCode)
-# names(grid)[tolower(names(grid)) == "cellcode"] <- "cellcode"
 
 # Get countries vectors ---------------------------------------------------
 

@@ -1,19 +1,18 @@
 # Get monthky temperature averages
 # Code inspired from https://frbcesab.github.io/spatial-r/chapters/31_toydata_mpl.html#get-climate-data-from-chelsa
 
-devtools::load_all()
-# Uncomment here() if run independently
-library(here)
+# Uncomment if run independently
+# devtools::load_all()
+# library(here)
+
+# Set the resolution (1, 2, 5, 10, or 50 km)
+# the resolution is set in the make.R file
+# if run independently, de-comment the following line
+# gridsize_km <- "10"
 
 # Data --------------------------------------------------------------------
 # CHELSA URL template for monthly temperatures
 url_monthlytas <- "https://os.unil.cloud.switch.ch/chelsa02/chelsa/global/monthly/tas/YYYY/CHELSA_tas_MM_YYYY_V.2.1.tif"
-
-# Set the resolution (5, 10, or 50 km)
-# the resolution is set in the make.R file
-# if run independantly, de-comment the folloting line
-gridsize_km <- "10"
-
 
 # Get grid ----------------------------------------------------------------
 gridfile <- paste0("EU_grid_", gridsize_km, "km.gpkg")
@@ -49,7 +48,7 @@ mtas <- exactextractr::exact_extract(
   grid_4326,
   fun = 'mean',
   progress = TRUE,
-  append_cols = "cellcode"
+  append_cols = "GRD_ID"
 )
 
 # Aggregate monthly temperature in yearly temperatures
@@ -62,19 +61,10 @@ replacement <- "\\1"
 mtas_long[, year := gsub(pattern = pattern,
                          replacement = replacement, x = variable)]
 # Aggregate
-mmtas <- mtas_long[, .(temp_mean = mean(value)), by = .(year, cellcode)]
+mmtas <- mtas_long[, .(temp_mean = mean(value)), by = .(year, GRD_ID)]
 
 # Convert to °C
 mmtas[, temp_mean := temp_mean - 273.15]
-
-# # Format back to several columns
-# mmtas_wide <- data.table::dcast(mmtas, 
-#                                 formula = cellcode ~ year, 
-#                                 value.var = "temp_mean")
-# 
-# grid_temp <- grid |> 
-#   dplyr::left_join(mmtas_wide, by = "cellcode")
-
 
 # Export ------------------------------------------------------------------
 write.csv(mmtas,
