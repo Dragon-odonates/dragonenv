@@ -51,6 +51,7 @@ rsconnect/
 # data folder
 data/raw-data/
 data/derived-data/EU_grid_*.gpkg
+data/derived-data/CHELSA_yearly_tas_*.csv
 
 # RStudio-related files
 .Rbuildignore
