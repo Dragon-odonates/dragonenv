@@ -22,7 +22,7 @@ library(exactextractr)
 # Set the resolution (1, 2, 5, 10, or 50 km)
 # the resolution is set in the make.R file
 # if run independently, de-comment the following line
-gridsize_km <- "50"
+# gridsize_km <- "50"
 gridfile <- paste0("EU_grid_", gridsize_km, "km.gpkg")
 
 # Load the EEA 50km grid with terra

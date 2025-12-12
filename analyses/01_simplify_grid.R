@@ -14,7 +14,7 @@ library(here)
 # Set the resolution (1, 2, 5, 10, or 50 km)
 # the resolution is set in the make.R file
 # if run independently, de-comment the following line
-gridsize_km <- "50"
+# gridsize_km <- "50"
 
 # List of countries to get the grid for
 # fmt: skip
