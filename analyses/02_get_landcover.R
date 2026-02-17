@@ -21,7 +21,6 @@ grid <- st_read(here("data", "derived-data", gridfile))
 
 # Load the corine land cover with terra
 clc <- rast(here("data", "raw-data", 
-                 "39959", "Results", "u2018_clc2018_v2020_20u1_raster100m",
                  "u2018_clc2018_v2020_20u1_raster100m", "DATA",
                  "U2018_CLC2018_V2020_20u1.tif"))
 

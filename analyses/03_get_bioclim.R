@@ -32,7 +32,7 @@ grid_4326 <- st_transform(grid, "EPSG:4326")
 
 # Load the bioclimatic data
 chelsa_files <- list.files(
-  file.path("data", "raw-data"),
+  file.path("data", "raw-data", "CHELSA"),
   "^CHELSA_",
   recursive = TRUE,
   full.names = TRUE

@@ -20,8 +20,8 @@ library(here)
 # fmt: skip
 country_list <- c("Austria", "Belgium", "Cyprus", "Czechia",
                   "Denmark", "Finland", "France", "Germany",
-                  "Ireland", "Italy", "Luxembourg", "Netherlands",
-                  "Norway", "Portugal", "Slovenia", "Spain", 
+                  "Ireland", "Isle of Man", "Italy", "Luxembourg", 
+                  "Netherlands", "Norway", "Portugal", "Slovenia", "Spain", 
                   "Sweden", "Switzerland", "United Kingdom")
 
 # get the name of the raw file
@@ -30,7 +30,7 @@ raw_file <- paste0("grid_", gridsize_km, "km_surf.gpkg")
 
 # Get grids ---------------------------------------------------------------
 # Original file downloaded from https://ec.europa.eu/eurostat/web/gisco/geodata/grids
-grid <- vect(here("data", "raw-data", raw_file))
+grid <- vect(here("data", "raw-data", "grid", raw_file))
 
 # Get countries vectors ---------------------------------------------------
 

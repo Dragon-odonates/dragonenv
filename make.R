@@ -14,7 +14,7 @@ if (!("remotes" %in% installed.packages())) {
 remotes::install_deps(upgrade = "never")
 
 # Set the resolution  (1, 2, 5, 10, or 50 km)
-gridsize_km <- "5"
+gridsize_km <- "10"
 
 ## Load Project Addins (R Functions) -------------
 devtools::load_all()
@@ -42,8 +42,8 @@ source(here("analyses", "03_get_bioclim.R"))
 
 # 4. Get mean yearly temperatures
 # All data downloaded in script here: https://www.chelsa-climate.org/datasets/chelsa_monthly
-message("4. Get mean yearly temperatures -------------------------------")
-source(here("analyses", "04_get_tempyear.R"))
+# message("4. Get mean yearly temperatures -------------------------------")
+# source(here("analyses", "04_get_tempyear.R"))
 
 # 5. Format environmental variables
 message("5. Format environmental variables -------------------------------")
