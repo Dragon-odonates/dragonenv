@@ -6,9 +6,34 @@
 # output:
 #  derived-data/CLC2018_XXkm.csv
 
+library(here)
 library(terra)
 library(sf)
 library(exactextractr)
+
+# Mask sea ----------------------------------------------------------------
+
+# # # Load the corine land cover with terra
+# clc <- rast(here("data", "raw-data",
+#                  "u2018_clc2018_v2020_20u1_raster100m", "DATA",
+#                  "U2018_CLC2018_V2020_20u1.tif"))
+# # # Tis is long but shows 128 values are the high sea, so we can mask it
+# # clc128 <- clc == 128
+# # plot(clc128)
+# 
+# # Get values to mask
+# clc_mask <- clc %in% c(44, 48, NA, NaN, 128)
+# # plot(clc_mask)
+# 
+# # Mask CLC with countries (remove sea and unused landcover values)
+# clc <- terra::mask(clc, clc_mask,
+#                    maskvalues = TRUE, updatevalue = NA)
+# 
+# terra::writeRaster(clc,
+#                    here("data", "derived-data", "clc_masked", "clc_masked.tif"),
+#                    overwrite = TRUE)
+
+# Set resolution ----------------------------------------------------------
 
 # Set the resolution (1, 2, 5, 10, or 50 km)
 # the resolution is set in the make.R file
@@ -19,10 +44,9 @@ gridfile <- paste0("EU_grid_", gridsize_km, "km.gpkg")
 # Load the EEA 50km grid with sf (only cells with observation)
 grid <- st_read(here("data", "derived-data", gridfile))
 
-# Load the corine land cover with terra
-clc <- rast(here("data", "raw-data", 
-                 "u2018_clc2018_v2020_20u1_raster100m", "DATA",
-                 "U2018_CLC2018_V2020_20u1.tif"))
+
+# Load masked CLC ---------------------------------------------------------
+clc <- rast(here("data", "derived-data", "clc_masked", "clc_masked.tif"))
 
 # make the extraction with exactextractr
 clc_grid <- exactextractr::exact_extract(
