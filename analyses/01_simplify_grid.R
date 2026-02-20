@@ -35,7 +35,7 @@ grid <- vect(here("data", "raw-data", "grid", raw_file))
 # Get countries vectors ---------------------------------------------------
 
 # Get countries borders
-countries <- rnaturalearth::ne_countries(country = country_list, scale = 50)
+countries <- rnaturalearth::ne_countries(country = country_list, scale = 10)
 
 # Crop data to continental Europe
 europe_bbox <- c(xmin = -13.0, xmax = 35.7, ymin = 33.8, ymax = 72.0)
@@ -60,11 +60,19 @@ grid_crop <- grid[rel, ]
 # plot(grid_crop)
 # lines(countries)
 
+
 # Export grid -------------------------------------------------------------
 gridfile_write <- paste0("EU_grid_", gridsize_km, "km.gpkg")
 
 writeVector(
   grid_crop,
   here("data", "derived-data", gridfile_write),
+  overwrite = TRUE
+)
+
+# Also write countries
+writeVector(
+  countries,
+  here("data", "derived-data", "countries.gpkg"),
   overwrite = TRUE
 )
