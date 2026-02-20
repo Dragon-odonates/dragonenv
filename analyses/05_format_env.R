@@ -14,25 +14,18 @@
 # 1. Load, format and aggregate CLC data ------------
 clcfile <- paste0("CLC2018_", gridsize_km, "km.csv")
 clc_grid <- read.csv(here("data", "derived-data", clcfile))
-# see the classes and labels from the original data
-# clc <- rast(here("data", "raw-data", "u2018_clc2018_v2020_20u1_raster100m", 
-#                  "DATA",
-#                  "U2018_CLC2018_V2020_20u1.tif"))
+# see the classes and labels from the original data (masked)
+# clc <- rast(here("data", "derived-data", "clc_masked", "clc_masked.tif"))
 # levels(clc$LABEL3)[[1]]
 agg_class <- list(
-  "artificial" = 1:11,
+  "artificial" = c(1:9, 11),
   "agriculture" = 12:22,
   "forest" = 23:25,
-  # "shrub" = 26:29,
-  # "open" = 30:34,
-  "natural" = 26:34,
-  # "marshes" = 35,
-  # "peat bogs" = 36,
+  "vegetation" = c(10, 26:29, 32),
+  "bare" = c(30, 31, 33, 34),
   "coastal_wetland" = c(37:39, 42, 43),
   "wetland" = c(35, 36, 41),
   "river" = 40
-  # "lakes" = 41,
-  # "marine waters" = 42:44
 )
 
 new_clc <- data.frame("GRD_ID" = clc_grid$GRD_ID)
