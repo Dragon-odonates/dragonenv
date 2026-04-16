@@ -53,20 +53,25 @@ names(bio_grid) <- gsub("^bio15$", "bio15_annual_sd_prec", names(bio_grid))
 bio_grid <- as.data.table(bio_grid)
 
 # 3. Get land fractions ------------
-land <- ne_countries(continent = "Europe", scale = 10)
+land <- ne_countries(scale = 10)
+europe_bbox <- c(xmin = -25, xmax = 40, ymin = 25, ymax = 75)
+land <- st_make_valid(land)
+land <- st_crop(land, europe_bbox)
+
 land <- st_union(land)
-land <- st_transform(land, 3035)
 land <- vect(land)
 
 grid <- vect(here("data", "derived-data", paste0("EU_grid_", gridsize_km, "km.gpkg")))
 grid <- grid[, "GRD_ID"]
+grid <- project(grid, "EPSG:4326")
 
 # plot(land)
-# plot(grid, add = TRUE)
+# lines(grid, col = "cornflowerblue")
 
 # Intersect grid with countries
 intersection <- intersect(grid, land)
-# plot(intersection)
+# plot(land)
+# lines(intersection, col = "cornflowerblue")
 
 # Compute area of each intersected piece
 intersection$area_land <- expanse(intersection, unit = "km")
@@ -95,7 +100,6 @@ names(cover_df)[names(cover_df) == "GRD_ID"] <- "grid_id"
 # Environment covariates
 new_clc <- as.data.table(new_clc)
 out <- new_clc[bio_grid, on = "GRD_ID"]
-setnames(out, old = "GRD_ID", new = "grid_id")
 out <- as.data.frame(out)
 outfile <- paste0("Envdata_", gridsize_km, "km.csv")
 
