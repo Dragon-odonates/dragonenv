@@ -21,10 +21,11 @@ agg_class <- list(
   "artificial" = c(1:9, 11),
   "agriculture" = 12:22,
   "forest" = 23:25,
-  "vegetation" = c(10, 26:29, 32),
+  "vegetation" = c(10, 26, 28:29, 32),
   "bare" = c(30, 31, 33, 34),
   "coastal_wetland" = c(37:39, 42, 43),
-  "wetland" = c(35, 36, 41),
+  "wetland" = c(35, 41),
+  "oligotrophic_bogs" = c(27, 36),
   "river" = 40
 )
 
@@ -46,17 +47,69 @@ biofile <- paste0("Bioclim_", gridsize_km, "km.csv")
 bio_grid <- read.csv(here("data", "derived-data", biofile))
 # rename columns to make them more explicit
 names(bio_grid) <- gsub("^bio10$", "bio10_temp_warmQ_dC", names(bio_grid))
+names(bio_grid) <- gsub("^bio4$", "bio4_annual_sd_temp", names(bio_grid))
 names(bio_grid) <- gsub("^bio12$", "bio12_annual_prec_mm", names(bio_grid))
-names(bio_grid) <- gsub("^bio4$", "bio4_sd_temp", names(bio_grid))
+names(bio_grid) <- gsub("^bio15$", "bio15_annual_sd_prec", names(bio_grid))
+bio_grid <- as.data.table(bio_grid)
 
-# 3. Merge and export ------------
-# table(new_clc$GRD_ID == bio_grid$GRD_ID)
-out <- cbind(new_clc, bio_grid[, -1])
+# 3. Get land fractions ------------
+land <- ne_countries(continent = "Europe", scale = 10)
+land <- st_union(land)
+land <- st_transform(land, 3035)
+land <- vect(land)
 
+grid <- vect(here("data", "derived-data", paste0("EU_grid_", gridsize_km, "km.gpkg")))
+grid <- grid[, "GRD_ID"]
+
+# plot(land)
+# plot(grid, add = TRUE)
+
+# Intersect grid with countries
+intersection <- intersect(grid, land)
+# plot(intersection)
+
+# Compute area of each intersected piece
+intersection$area_land <- expanse(intersection, unit = "km")
+
+# Compute area of each original grid cell
+grid$area_total <- expanse(grid, unit = "km")
+
+# Aggregate intersected land area back to grid cell ID
+land_area <- terra::aggregate(area_land ~ GRD_ID, 
+                              data = as.data.frame(intersection), FUN = sum)
+
+# Join back to grid
+cover_df <- as.data.frame(grid)
+cover_df <- merge(cover_df, land_area, by = "GRD_ID", all.x = TRUE)
+cover_df$area_land[is.na(cover_df$area_land)] <- 0
+
+# Calculate percentage
+cover_df$percent_land <- (cover_df$area_land/cover_df$area_total)*100
+# hist(cover_df$percent_land, breaks = seq(0, 100, by = 5))
+
+# Rename
+names(cover_df)[names(cover_df) == "GRD_ID"] <- "grid_id"
+
+# 4. Merge and export ------------
+
+# Environment covariates
+new_clc <- as.data.table(new_clc)
+out <- new_clc[bio_grid, on = "GRD_ID"]
+setnames(out, old = "GRD_ID", new = "grid_id")
+out <- as.data.frame(out)
 outfile <- paste0("Envdata_", gridsize_km, "km.csv")
+
 write.csv(
   out,
   here("data", "derived-data", outfile),
+  row.names = FALSE
+)
+
+# Write landcover percentage table
+outfile_percent <- paste0("landcover_percent_", gridsize_km, "km.csv")
+write.csv(
+  cover_df,
+  here("data", "derived-data", outfile_percent),
   row.names = FALSE
 )
 

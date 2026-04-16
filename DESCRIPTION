@@ -33,4 +33,5 @@ Depends:
     exactextractr,
     rnaturalearth,
     sf,
-    terra
+    terra,
+    data.table

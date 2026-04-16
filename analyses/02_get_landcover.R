@@ -13,11 +13,11 @@ library(exactextractr)
 
 # Mask sea ----------------------------------------------------------------
 
-# # # Load the corine land cover with terra
+# # Load CLC with terra
 # clc <- rast(here("data", "raw-data",
 #                  "u2018_clc2018_v2020_20u1_raster100m", "DATA",
 #                  "U2018_CLC2018_V2020_20u1.tif"))
-# # # Tis is long but shows 128 values are the high sea, so we can mask it
+# # This is long but shows 128 values are the high sea, so we can mask it
 # # clc128 <- clc == 128
 # # plot(clc128)
 # 
