@@ -34,9 +34,9 @@ new_clc <- data.frame("GRD_ID" = clc_grid$GRD_ID)
 for (i in seq_along(agg_class)) {
   labi <- paste0("frac_", agg_class[[i]])
   if (length(labi) > 1) {
-    sumi <- rowSums(clc_grid[, labi]) * 100
+    sumi <- rowSums(clc_grid[, labi])
   } else {
-    sumi <- clc_grid[, labi] * 100
+    sumi <- clc_grid[, labi]
   }
   new_clc <- cbind(new_clc, sumi)
 }
@@ -88,14 +88,27 @@ cover_df <- as.data.frame(grid)
 cover_df <- merge(cover_df, land_area, by = "GRD_ID", all.x = TRUE)
 cover_df$area_land[is.na(cover_df$area_land)] <- 0
 
-# Calculate percentage
-cover_df$percent_land <- (cover_df$area_land/cover_df$area_total)*100
-# hist(cover_df$percent_land, breaks = seq(0, 100, by = 5))
+# Compute proportion
+cover_df$prop_land <- (cover_df$area_land/cover_df$area_total)
+hist(cover_df$prop_land, breaks = seq(0, 100, by = 5))
 
-# Rename
-names(cover_df)[names(cover_df) == "GRD_ID"] <- "grid_id"
+# 4. Check that the CLC sum to one------------
+clc_prop <- rowSums(new_clc[, 2:ncol(new_clc)])
+clc_prop_df <- data.frame(GRD_ID = new_clc$GRD_ID, prop = clc_prop)
 
-# 4. Merge and export ------------
+# Plot grids that don't sum to one
+grid <- vect(here("data", "derived-data", paste0("EU_grid_", gridsize_km, "km.gpkg")))
+merged_grid <- merge(grid, clc_prop_df, by = "GRD_ID")
+plot(merged_grid[abs(merged_grid$prop-1) < 0.01,])
+lines(merged_grid[abs(merged_grid$prop-1) >= 0.01, ], col = "red")
+
+# Get percent of land for CLC that don't sum to one
+no_sum_1 <- clc_prop_df[abs(clc_prop_df$prop-1) >= 0.01, "GRD_ID"]
+
+cover_df[cover_df$GRD_ID %in% no_sum_1, ]
+# They are all just sea
+
+# 5. Merge and export ------------
 
 # Environment covariates
 new_clc <- as.data.table(new_clc)
