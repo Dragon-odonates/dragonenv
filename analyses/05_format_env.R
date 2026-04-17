@@ -123,7 +123,7 @@ write.csv(
 )
 
 # Write landcover percentage table
-outfile_percent <- paste0("landcover_percent_", gridsize_km, "km.csv")
+outfile_percent <- paste0("land_prop_", gridsize_km, "km.csv")
 write.csv(
   cover_df,
   here("data", "derived-data", outfile_percent),
