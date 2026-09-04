@@ -9,7 +9,7 @@
 # Set the resolution (1, 2, 5, 10, or 50 km)
 # the resolution is set in the make.R file
 # if run independently, de-comment the following line
-# gridsize_km <- "50"
+# gridsize_km <- "20"
 
 # 1. Load, format and aggregate CLC data ------------
 clcfile <- paste0("CLC2018_", gridsize_km, "km.csv")

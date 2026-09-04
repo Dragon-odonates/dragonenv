@@ -14,14 +14,14 @@ library(here)
 # Set the resolution (1, 2, 5, 10, or 50 km)
 # the resolution is set in the make.R file
 # if run independently, de-comment the following line
-# gridsize_km <- "50"
+# gridsize_km <- "20"
 
 # List of countries to get the grid for
 # fmt: skip
-country_list <- c("Austria", "Belgium", "Cyprus", "Czechia",
+country_list <- c("Andorra", "Austria", "Belgium", "Cyprus", "Czechia",
                   "Denmark", "Finland", "France", "Germany",
-                  "Ireland", "Isle of Man", "Italy", "Luxembourg", 
-                  "Netherlands", "Northern Cyprus", "Norway", "Portugal", "Slovenia", "Spain", 
+                  "Ireland", "Isle of Man", "Italy", "Liechtenstein", "Luxembourg",
+                  "Netherlands", "Northern Cyprus", "Norway", "Portugal", "Slovenia", "Spain",
                   "Sweden", "Switzerland", "United Kingdom")
 
 # get the name of the raw file
@@ -57,6 +57,10 @@ rel <- is.related(grid, countries, "intersects")
 # subsetting the grid
 grid_crop <- grid[rel, ]
 
+# ggplot2::ggplot() +
+#   ggplot2::geom_sf(data = sf::st_as_sf(grid_crop), fill = "grey", col = NA) +
+#   ggplot2::geom_sf(data = sf::st_as_sf(countries), fill = NA, col = "darkgrey")
+# 
 # plot(grid_crop)
 # lines(countries)
 
