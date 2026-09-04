@@ -55,6 +55,9 @@ data/derived-data/CHELSA_yearly_tas_*.csv
 data/derived-data/old/*
 data/derived-data/clc_masked/*
 
+# Too big
+data/derived-data/EU_subgrid*
+
 # RStudio-related files
 .Rbuildignore
 *.Rproj
