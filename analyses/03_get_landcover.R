@@ -39,11 +39,15 @@ library(exactextractr)
 # the resolution is set in the make.R file
 # if run independently, de-comment the following line
 # gridsize_km <- "50"
-gridfile <- paste0("EU_grid_", gridsize_km, "km.gpkg")
 
-# Load the EEA 50km grid with sf (only cells with observation)
+gridfile <- paste0("EU_grid_", gridsize_km, "km.gpkg")
+subgridfile <- paste0("EU_subgrid_", gridsize_km, "km_subsize_", round(subgrid_size_km, 1), "km.gpkg")
+
+# Load the EEA grid with sf
 grid <- st_read(here("data", "derived-data", gridfile))
 
+# # Load the subgrid
+# subgrid <- st_read(here("data", "derived-data", subgridfile))
 
 # Load masked CLC ---------------------------------------------------------
 clc <- rast(here("data", "derived-data", "clc_masked", "clc_masked.tif"))
@@ -56,6 +60,15 @@ clc_grid <- exactextractr::exact_extract(
   progress = TRUE,
   append_cols = "GRD_ID"
 )
+
+# # make the extraction with exactextractr
+# clc_subgrid <- exactextractr::exact_extract(
+#   clc,
+#   subgrid,
+#   fun = 'max',
+#   progress = TRUE,
+#   append_cols = c("GRD_ID", "subcell_unique_id", "subcell_id")
+# )
 
 clcfile <- paste0("CLC2018_", gridsize_km, "km.csv")
 # save full extraction
